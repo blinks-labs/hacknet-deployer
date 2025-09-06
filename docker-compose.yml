@@ -1,6 +1,25 @@
-version: '3.8'
+PROJECT_NAME := hackaton
 
-services:
-  hello:
-    image: hello-world
-    container_name: test_hello
+help: ## Show help
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+stop: ## Stop compose services
+	@echo "Stopping ${PROJECT_NAME} services..."
+	docker compose -f docker-compose.yaml down
+
+pull: ## Pull latest changes
+	@echo "Pulling latest changes for ${PROJECT_NAME}..."
+	git pull origin
+	docker compose -f docker-compose.yaml pull
+	$(MAKE) stop
+
+deploy_p2p: pull ## Deploy optimum p2p via docker
+	@echo "Deploying ${PROJECT_NAME} optimum p2p..."
+	docker compose -f docker-compose.yaml up --build -d --no-deps optimum-node
+
+deploy_proxy: pull ## Deploy optimum proxy via docker
+	@echo "Deploying ${PROJECT_NAME} optimum proxy..."
+	docker compose -f docker-compose.yaml up --build -d --no-deps proxy
+
+.PHONY: help stop pull deploy_p2p deploy_proxy
+.DEFAULT_GOAL := help
