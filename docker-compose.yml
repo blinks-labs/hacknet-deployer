@@ -1,25 +1,48 @@
-PROJECT_NAME := hackaton
+version: '3'
 
-help: ## Show help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+services:
+  proxy:
+    image: 'getoptimum/proxy:v0.0.1-rc4'
+    container_name: proxy
+    hostname: proxy
+    volumes:
+      - ansible/config_proxy:/proxy/config
+    environment:
+      - LOG_LEVEL=debug
+    network_mode: host
+    restart: on-failure
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 512M    # cap RAM at 512 MiB
+          cpus: '0.50'    # 50% of one CPU
 
-stop: ## Stop compose services
-	@echo "Stopping ${PROJECT_NAME} services..."
-	docker compose -f docker-compose.yaml down
-
-pull: ## Pull latest changes
-	@echo "Pulling latest changes for ${PROJECT_NAME}..."
-	git pull origin
-	docker compose -f docker-compose.yaml pull
-	$(MAKE) stop
-
-deploy_p2p: pull ## Deploy optimum p2p via docker
-	@echo "Deploying ${PROJECT_NAME} optimum p2p..."
-	docker compose -f docker-compose.yaml up --build -d --no-deps optimum-node
-
-deploy_proxy: pull ## Deploy optimum proxy via docker
-	@echo "Deploying ${PROJECT_NAME} optimum proxy..."
-	docker compose -f docker-compose.yaml up --build -d --no-deps proxy
-
-.PHONY: help stop pull deploy_p2p deploy_proxy
-.DEFAULT_GOAL := help
+  optimum-node:
+    image: 'getoptimum/p2pnode:v0.0.1-rc4'
+    container_name: p2pnode
+    hostname: p2pnode
+    volumes:
+      - /home/admin/p2p_identity:/identity
+      - ansible/config_p2p:/p2pnode/config
+    environment:
+      - LOG_LEVEL=debug
+      - CLUSTER_ID=${CLUSTER_ID}
+      - NODE_MODE=${NODE_MODE}
+      - BOOTSTRAP_PEERS=${BOOTSTRAP_PEERS}
+      - IDENTITY_DIR=/identity
+      - REMOTE_ADDR=${REMOTE_ADDR}
+    network_mode: host
+    restart: on-failure
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 512M    # cap RAM at 512 MiB
+          cpus: '0.50'    # 50% of one CPU
