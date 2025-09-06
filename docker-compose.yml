@@ -6,7 +6,7 @@ services:
     container_name: proxy
     hostname: proxy
     volumes:
-      - /home/optimumuser/proxy:/proxy/config
+      - /home/optimumuser/go/src:/proxy/config
     environment:
       - LOG_LEVEL=debug
     network_mode: host
@@ -27,7 +27,7 @@ services:
     hostname: p2pnode
     volumes:
       - /home/optimumuser/identity:/identity
-      - /home/optimumuser/identity:/p2pnode/config
+      - /home/optimumuser/go/src:/p2pnode/config
     environment:
       - LOG_LEVEL=debug
       - CLUSTER_ID=${CLUSTER_ID}
