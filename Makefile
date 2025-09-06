@@ -15,11 +15,11 @@ pull: ## Pull latest changes
 
 deploy_p2p: pull ## Deploy optimum p2p via docker
 	@echo "Deploying ${PROJECT_NAME} optimum p2p..."
-	docker compose -f docker-compose.yaml up --build -d --no-deps optimum-node
+	docker compose -f docker-compose.yml up -d --no-deps optimum-node
 
 deploy_proxy: pull ## Deploy optimum proxy via docker
 	@echo "Deploying ${PROJECT_NAME} optimum proxy..."
-	docker compose -f docker-compose.yaml up --build -d --no-deps proxy
+	docker compose -f docker-compose.yml up -d --no-deps proxy
 
 .PHONY: help stop pull deploy_p2p deploy_proxy
 .DEFAULT_GOAL := help
