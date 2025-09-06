@@ -6,7 +6,7 @@ services:
     container_name: proxy
     hostname: proxy
     volumes:
-      - ansible/config_proxy:/proxy/config
+      - /home/optimumuser/proxy:/proxy/config
     environment:
       - LOG_LEVEL=debug
     network_mode: host
@@ -26,7 +26,7 @@ services:
     container_name: p2pnode
     hostname: p2pnode
     volumes:
-      - /home/optimumuser/p2p_identity:/identity
+      - /home/optimumuser/identity:/identity
       - /home/optimumuser/identity:/p2pnode/config
     environment:
       - LOG_LEVEL=debug
