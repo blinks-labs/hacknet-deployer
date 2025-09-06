@@ -5,12 +5,12 @@ help: ## Show help
 
 stop: ## Stop compose services
 	@echo "Stopping ${PROJECT_NAME} services..."
-	docker compose -f docker-compose.yaml down
+	docker compose -f docker-compose.yml down
 
 pull: ## Pull latest changes
 	@echo "Pulling latest changes for ${PROJECT_NAME}..."
 	git pull origin
-	docker compose -f docker-compose.yaml pull
+	docker compose -f docker-compose.yml pull
 	$(MAKE) stop
 
 deploy_p2p: pull ## Deploy optimum p2p via docker
