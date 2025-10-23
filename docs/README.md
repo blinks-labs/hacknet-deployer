@@ -73,15 +73,14 @@ python3 scripts/generate_docker-compose_optimump2p.py --num-p2pnodes 10 --image 
 You need to create a P2P identity key for the bootstrap node.
 
 ```shell
-make -C ../optimum-dev-setup-guide generate-identity
+make generate-key KEY_DIR=./optimump2p/data/identity
 ```
 
 **Example output:**
 ```
-make: Entering directory '/home/user/optimum/optimum-dev-setup-guide'
 Generating new P2P identity...
-Peer ID: 12D3KooWH4v2ZyiehGSQ68qdX7ScpjiWhaSMiQE6HgnvrwSEJMqu
-make: Leaving directory '/home/user/optimum/optimum-dev-setup-guide'
+Peer ID: 12D3KooWJRyAq9GdmsBySK12xvPuGWRPvWhbrFFLUaffaAbdRZWp
+P2P identity in ./optimump2p/data/identity/p2p.key
 ```
 
 ### Step 4: Verify the Key
@@ -89,12 +88,12 @@ make: Leaving directory '/home/user/optimum/optimum-dev-setup-guide'
 Check that the key file was created:
 
 ```shell
-cat /home/user/optimum/optimum-dev-setup-guide/identity/p2p.key
+cat optimump2p/data/identity/p2p.key
 ```
 
 **Example output:**
 ```json
-{"Key":"CAESQNip0wtV4LpSlL3a3wTIyo9bKfzt0VYdsmfFeeWJ4fAx7eUx1zxyeGhbfAB9DAA4FYzA4FEXTySZpba5KA2OHzM=","ID":"12D3KooWRq1VcVYyKTGRGuSzpMT792mBecAPSDKhGwKcFdCd8Pbp"}
+{"Key":"CAESQN7PwLvK1a2RPAoB3uRnay1G5rXoS1NR7ix6lNFyiES1f/xmaPf5GmpyiHWmCEkRr5YHBG0znewSQTaqZjY0NUE=","ID":"12D3KooWJRyAq9GdmsBySK12xvPuGWRPvWhbrFFLUaffaAbdRZWp"}
 ```
 
 ### Step 5: Deploy the Docker Containers
@@ -102,24 +101,24 @@ cat /home/user/optimum/optimum-dev-setup-guide/identity/p2p.key
 Deploy the containers using the Peer ID from the key as the `BOOTSTRAP_PEER_ID` environment variable:
 
 ```shell
-BOOTSTRAP_PEER_ID=12D3KooWRq1VcVYyKTGRGuSzpMT792mBecAPSDKhGwKcFdCd8Pbp docker compose -f docker-compose.yml up -d
+BOOTSTRAP_PEER_ID=12D3KooWJRyAq9GdmsBySK12xvPuGWRPvWhbrFFLUaffaAbdRZWp docker compose -f docker-compose.yml up -d
 ```
 
-BOOTSTRAP_PEER_ID=12D3KooWH4v2ZyiehGSQ68qdX7ScpjiWhaSMiQE6HgnvrwSEJMqu docker compose -f docker-compose.yml up -d
+BOOTSTRAP_PEER_ID=12D3KooWN7vEDc4n1j9Kr7DduP2PPSMjHGGngF71RSzPGveHPWCK docker compose -f docker-compose.yml up -d
 
 **Expected output for 10 nodes:**
 ```
 [+] Running 10/10
- ✔ Container hacknet-deployer-p2pnode-4-1   Started                                                                         1.1s 
- ✔ Container hacknet-deployer-p2pnode-7-1   Started                                                                         0.5s 
- ✔ Container hacknet-deployer-p2pnode-6-1   Started                                                                         0.7s 
- ✔ Container hacknet-deployer-p2pnode-1-1   Started                                                                         0.9s 
- ✔ Container hacknet-deployer-p2pnode-2-1   Started                                                                         1.1s 
- ✔ Container hacknet-deployer-p2pnode-3-1   Started                                                                         0.7s 
- ✔ Container hacknet-deployer-p2pnode-8-1   Started                                                                         1.0s 
- ✔ Container hacknet-deployer-p2pnode-9-1   Started                                                                         0.9s 
- ✔ Container hacknet-deployer-p2pnode-5-1   Started                                                                         0.8s 
- ✔ Container hacknet-deployer-p2pnode-10-1  Started                                                                         1.2s 
+ ✔ Container hacknet-deployer-p2pnode-4-1   Started                                                               1.1s 
+ ✔ Container hacknet-deployer-p2pnode-7-1   Started                                                               0.5s 
+ ✔ Container hacknet-deployer-p2pnode-6-1   Started                                                               0.7s
+ ✔ Container hacknet-deployer-p2pnode-1-1   Started                                                               0.9s 
+ ✔ Container hacknet-deployer-p2pnode-2-1   Started                                                               1.1s 
+ ✔ Container hacknet-deployer-p2pnode-3-1   Started                                                               0.7s 
+ ✔ Container hacknet-deployer-p2pnode-8-1   Started                                                               1.0s 
+ ✔ Container hacknet-deployer-p2pnode-9-1   Started                                                               0.9s 
+ ✔ Container hacknet-deployer-p2pnode-5-1   Started                                                               0.8s 
+ ✔ Container hacknet-deployer-p2pnode-10-1  Started                                                               1.2s 
 ```
 
 ### Step 6: Verify Running Containers

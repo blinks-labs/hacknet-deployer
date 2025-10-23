@@ -3,6 +3,16 @@ PROJECT_NAME := hackaton
 help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+generate-key: ## Generate P2P identity (if missing)
+	@mkdir -p ./$(KEY_DIR)
+	@if [ ! -f "./$(KEY_DIR)/p2p.key" ]; then \
+		echo "Generating new P2P identity..."; \
+		./optimump2p/keygen/p2p-keygen -dir $(KEY_DIR) .; \
+		echo  "P2P identity in $(KEY_DIR)/p2p.key"; \
+	else \
+		echo "P2P identity already exists at `pwd`/$(KEY_DIR)/p2p.key"; \
+	fi
+
 stop: ## Stop compose services
 	@echo "Stopping ${PROJECT_NAME} services..."
 	docker compose -f docker-compose.yml down
