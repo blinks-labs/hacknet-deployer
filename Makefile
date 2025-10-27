@@ -1,7 +1,7 @@
 PROJECT_NAME := hackaton
 HOSTS_FILE ?= hosts_hackathon.ini
-BOOTSTRAP_NODE_INDEX ?= 10
-NUM_PROXIES ?= 2
+BOOTSTRAP_NODE_INDEX ?= 12
+NUM_PROXIES ?= 4
 
 define extract_hosts
 $(if $(strip $(1)),$(shell awk '/ansible_host=/ {print $$2}' $(1) | cut -d'=' -f2),)
@@ -30,6 +30,10 @@ deploy_proxy: pull ## Deploy optimum proxy via docker
 	@echo "Deploying ${PROJECT_NAME} optimum proxy..."
 	docker compose -f docker-compose.yml up -d --no-deps proxy
 
+deploy: ## Deploy clusters (usage: make deploy)
+	ansible-playbook -i ./nodes.ini deploy_clusters.yml -u optimumuser --ask-pass --ask-become-pass 
+
+
 check_hackathon_hosts: ## Check connectivity to hackathon hosts (requires HOSTS_FILE=)
 	@echo "Checking connectivity to hackathon hosts..."
 	@HOSTS="$(call extract_hosts,$(HOSTS_FILE))"; \
@@ -43,14 +47,11 @@ check_hackathon_hosts: ## Check connectivity to hackathon hosts (requires HOSTS_
 		fi; \
 	done
 
-upload_configs: ## Upload configuration files to servers (usage: make upload_configs CLUSTER=p2p_nodes_cluster_a)
-	ansible-playbook -i ./nodes.ini upload_configs.yml -u optimumuser --ask-pass --ask-become-pass --limit $(CLUSTER)
+upload_config: ## Upload configuration file to servers (usage: make upload_configs)
+	ansible-playbook -i ./nodes.ini upload_configs.yml -u optimumuser --ask-pass --ask-become-pass 
 
-deploy_clusters: ## Deploy clusters (usage: make deploy_clusters CLUSTER=p2p_nodes_cluster_a)
-	ansible-playbook -i ./nodes.ini deploy_clusters.yml -u optimumuser --ask-pass --ask-become-pass --limit $(CLUSTER) --extra-vars "target_cluster=$(CLUSTER) num_proxies=$(NUM_PROXIES)"
-
-stop_and_remove_containers: ## Stop and remove containers (usage: make stop_and_remove_containers CLUSTER=p2p_nodes_cluster_a)
-	ansible-playbook -i ./nodes.ini stop_and_remove_containers.yml -u optimumuser --ask-pass --ask-become-pass --limit $(CLUSTER) --extra-vars "target_cluster=$(CLUSTER)"
+stop_and_remove_containers: ## Stop and remove containers (usage: make stop_and_remove_containers)
+	ansible-playbook -i ./nodes.ini stop_and_remove_containers.yml -u optimumuser --ask-pass --ask-become-pass
 	
 .DEFAULT_GOAL := help
 .PHONY: help check_hackathon_hosts upload_configs deploy_clusters stop_and_remove_containers
