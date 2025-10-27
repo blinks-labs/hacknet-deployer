@@ -1,0 +1,23 @@
+# Sidecar (proxy interface) configuration
+sidecar:
+  node_mode: "optimum" # Options: "gossipsub", "optimum"
+  listen_port: 33212 # grpc port for sidecar
+  identity_dir: "/identity" # where p2p key located
+
+# P2P node API configuration (used for health check)
+api:
+  http_port: 9090
+
+# Optimum protocol configuration
+optimum:
+  listen_port: 7070
+  max_message_size_bytes: 1048576  # 1MB
+  random_message_size_bytes: 512
+  rlnc_shard_factor: 4
+  publisher_shard_multiplier: 1.5
+  forward_shard_threshold: 0.75
+  mesh_degree_target: 6
+  mesh_degree_min: 4
+  mesh_degree_max: 12
+  bootstrap_peers:
+    - "/ip4/<bootstrap_IP>/tcp/7070/p2p/<bootstrap_peer_id>"

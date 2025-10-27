@@ -1,0 +1,22 @@
+---
+- hosts: "p2p_nodes"
+  user: optimumuser
+  become: true
+  gather_facts: false
+  vars:
+    target_user: optimumuser
+    config_p2p_dir: ./config_p2p
+    config_p2p_dest: /home/optimumuser/go/src/p2pnode.yaml
+  tasks:
+    - name: Ensure destination P2P directory exists
+      ansible.builtin.file:
+        path: "{{ config_p2p_dest | dirname }}"
+        state: directory
+        mode: "0755"
+    - name: Upload the correct P2P config for this host's profile
+      ansible.builtin.copy:
+        src: "{{ config_p2p_dir }}/config_p2p.yml"
+        dest: "{{ config_p2p_dest }}"
+        owner: root
+        group: root
+        mode: "0644"
