@@ -41,9 +41,24 @@ The other `make` commands such as `make deploy_proxy` or `make deploy_p2p` are u
 
 Note: The installation of mump2p-cli is required for this step
 
-You will run two scripts: `scripts/subscribe.sh` and `scripts/publish.sh` . Both scripts will take as input a Proxy IP. During your experiments, it is important to choose different Proxy IPs, not the same in both scripts. 
+You will run two scripts: `scripts/subscribe.sh` and `scripts/publish.sh` . Both scripts will take as input a Proxy IP
 
-These are sample scripts, you can modify them and increase the publish rate, add sleep, increase message size, change Proxy locations, etc.  
+```
+PROXY_IP="your-proxy-ip"
+```
+
+During your experiments, it is important to choose different Proxy IPs, not the same in both scripts. These are sample scripts, you can modify them and increase the publish rate, add sleep, increase message size, change Proxy locations, etc.  
+
+Run subscribe in one terminal:
+```
+./subscribe
+```
+
+and publish in another terminal:
+
+```
+./publish
+```
 
 ### P2P Configurations
 
