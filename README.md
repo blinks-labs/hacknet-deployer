@@ -98,7 +98,7 @@ Run `curl <bootstrap_ip>:9090/api/v1/node-state | jq` . Running this command wil
   "pub_key": "12D3KooWNqxhrQXgDKhfWnJi3kCNS9XgkPdnSGvAV3QY4eZJ4oCF",
   "peers": [],
   "addresses": [
-    "/ip4/10.162.0.63/tcp/7070"
+    "/ip4/<internal_ip>/tcp/7070"
   ],
   "topics": []
 }
