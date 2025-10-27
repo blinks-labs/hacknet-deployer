@@ -1,6 +1,5 @@
 #!/bin/bash
 # subscribe script
 
-PROXY_IP="your-proxy-ip"
-mump2p subscribe --topic="mytopic" --service-url="http://${PROXY_IP}:8080"
-santiago@gaby:~/optimum/scripts$ 
+PROXY_IP="34.82.149.13"
+mump2p --disable-auth --client-id="hackathon" subscribe --topic=mytopic --service-url="http://${PROXY_IP}:8080"
