@@ -18,7 +18,7 @@
       ansible.builtin.shell: |
         cd /home/optimumuser/go/src/hacknet-deployer
         git stash --include-untracked
-        if [ -f docker-compose.yml ] && [ ! -f docker-compose.yml ]; then
+        if [ -f docker-compose.yml ] && [ ! -f docker-compose.yaml ]; then
           ln -sf docker-compose.yml docker-compose.yaml
         fi
       ignore_errors: yes

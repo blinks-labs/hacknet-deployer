@@ -54,4 +54,4 @@ stop_and_remove_containers: ## Stop and remove containers (usage: make stop_and_
 	ansible-playbook -i ./nodes.ini stop_and_remove_containers.yml -u optimumuser --ask-pass --ask-become-pass
 	
 .DEFAULT_GOAL := help
-.PHONY: help check_hackathon_hosts upload_configs deploy_clusters stop_and_remove_containers
+.PHONY: help check_hackathon_hosts upload_config deploy stop_and_remove_containers
