@@ -1,0 +1,36 @@
+---
+- hosts: "{{ target_cluster | default('p2p_nodes') }}"
+  user: optimumuser
+  become: true
+  gather_facts: false
+  vars:
+    target_user: optimumuser
+
+  tasks:
+    - name: Show current running containers
+      ansible.builtin.shell: "docker ps -a"
+      register: docker_ps_output
+      ignore_errors: yes
+
+    - name: Display current containers
+      ansible.builtin.debug:
+        msg: "{{ docker_ps_output.stdout_lines }}"
+      when: docker_ps_output.stdout_lines is defined
+
+    - name: Stop all running containers
+      ansible.builtin.shell: "docker stop $(docker ps -q) 2>/dev/null || true"
+      ignore_errors: yes
+
+    - name: Remove all containers
+      ansible.builtin.shell: "docker rm $(docker ps -aq) 2>/dev/null || true"
+      ignore_errors: yes
+
+    - name: Show final container status
+      ansible.builtin.shell: "docker ps -a"
+      register: final_docker_ps_output
+      ignore_errors: yes
+
+    - name: Display final container status
+      ansible.builtin.debug:
+        msg: "{{ final_docker_ps_output.stdout_lines }}"
+      when: final_docker_ps_output.stdout_lines is defined

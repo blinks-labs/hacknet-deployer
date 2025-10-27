@@ -1,0 +1,36 @@
+---
+- hosts: "{{ target_cluster | default('p2p_nodes') }}"
+  user: optimumuser
+  become: true
+  gather_facts: false
+  vars:
+    target_user: optimumuser
+    num_proxies: 4
+    # Put your real commands here:
+    deploy_proxy_cmd: "cd /home/optimumuser/go/src/hacknet-deployer && make deploy_proxy"
+    deploy_p2p_cmd:  "cd /home/optimumuser/go/src/hacknet-deployer && make deploy_p2p"
+
+    # Cluster groups are named like p2p_nodes_cluster_a/b/...
+    cluster_prefix_regex: '^p2p_nodes_cluster_'
+
+  tasks:
+    - name: Pre-deployment cleanup - stash local changes and ensure correct file naming
+      ansible.builtin.shell: |
+        cd /home/optimumuser/go/src/hacknet-deployer
+        git stash --include-untracked
+        if [ -f docker-compose.yml ] && [ ! -f docker-compose.yml ]; then
+          ln -sf docker-compose.yml docker-compose.yaml
+        fi
+      ignore_errors: yes
+    - name: Determine this host's cluster group (e.g. p2p_nodes_cluster_a)
+      ansible.builtin.set_fact:
+        cluster_group: "{{ (group_names | select('match', cluster_prefix_regex) | list | first) }}"
+      
+    - name: Run cmd_first on the first {{ num_proxies }} hosts, cmd_rest on the rest
+      ansible.builtin.shell: >
+        {% if (groups[cluster_group].index(inventory_hostname) | int)  < 4 %}
+          {{ deploy_proxy_cmd }}
+        {% else %}
+          {{ deploy_p2p_cmd }}
+        {% endif %}
+
