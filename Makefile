@@ -7,7 +7,6 @@ define extract_hosts
 $(if $(strip $(1)),$(shell awk '/ansible_host=/ {print $$2}' $(1) | cut -d'=' -f2),)
 endef
 
-
 help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
@@ -47,8 +46,8 @@ check_hackathon_hosts: ## Check connectivity to hackathon hosts (requires HOSTS_
 		fi; \
 	done
 
-upload_config: ## Upload configuration file to servers (usage: make upload_configs)
-	ansible-playbook -i ./nodes.ini upload_configs.yml -u optimumuser --ask-pass --ask-become-pass 
+upload_config: ## Upload configuration file to servers (usage: make upload_config)
+	ansible-playbook -i ./nodes.ini upload_config.yml -u optimumuser --ask-pass --ask-become-pass 
 
 stop_and_remove_containers: ## Stop and remove containers (usage: make stop_and_remove_containers)
 	ansible-playbook -i ./nodes.ini stop_and_remove_containers.yml -u optimumuser --ask-pass --ask-become-pass

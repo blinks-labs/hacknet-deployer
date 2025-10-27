@@ -23,7 +23,7 @@ First, let's go over your cluster. A sample cluster contains 12 servers with dif
   australia-southeast1: 1 # Singapore
 ```
 
-You will given get a list of IPs, your cluster, that needs to be populated in your `nodes.ini` file. The chosen convention is that your top 4 IPs are your Proxies IP servers and the bottom 8 IPs are you P2PNodes with the last P2PNode being your bootstrap node.
+You will be given get a list of IPs, your cluster, that needs to be populated in your `nodes.ini` file. The chosen convention is that your top 4 IPs are your Proxies IP servers and the bottom 8 IPs are you P2PNodes with the last P2PNode being your bootstrap node.
 
 ### Make Commands
 
