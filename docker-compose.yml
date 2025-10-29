@@ -2,7 +2,7 @@ version: '3'
 
 services:
   proxy:
-    image: 'getoptimum/proxy:v0.0.1-rc4'
+    image: 'getoptimum/proxy:v0.0.1-rc9'
     container_name: proxy
     hostname: proxy
     volumes:
@@ -22,7 +22,7 @@ services:
           cpus: '0.50'    # 50% of one CPU
 
   optimum-node:
-    image: 'getoptimum/p2pnode:v0.0.1-rc4'
+    image: 'getoptimum/p2pnode:v0.0.1-rc9'
     container_name: p2pnode
     hostname: p2pnode
     volumes:
