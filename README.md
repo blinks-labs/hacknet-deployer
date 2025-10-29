@@ -142,3 +142,6 @@ Before you start the experiments, make sure you can test the basic publish and s
   - Upload your new configuration file with `make upload_config` 
   - Deploy again `make deploy`
 
+### Tracks and Other Information
+- **Details**: [https://dorahacks.io/hackathon/hackmos-2025/detail](https://dorahacks.io/hackathon/hackmos-2025/detail)
+- **Tracks**: [https://dorahacks.io/hackathon/hackmos-2025/tracks](https://dorahacks.io/hackathon/hackmos-2025/tracks)
