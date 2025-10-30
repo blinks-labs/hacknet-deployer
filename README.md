@@ -51,13 +51,13 @@ During your experiments, it is important to choose different Proxy IPs, not the 
 
 Run subscribe in one terminal:
 ```
-./subscribe
+./subscribe.sh
 ```
 
 and publish in another terminal:
 
 ```
-./publish
+./publish.sh
 ```
 
 ### P2P Configurations
