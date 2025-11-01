@@ -92,7 +92,7 @@ Here you can switch between `optimum` and `gossipsub` algorithms. You can also p
 
 You will also need to populate this configuration file with your `bootstrap_peers` information, you will need the bootstrap IP (which is by convention the last IP in the `nodes.ini` file. 
 
-Run `curl <bootstrap_ip>:9090/api/v1/node-state | jq` . Running this command will return something like:
+Run `curl 34.118.183.212:9090/api/v1/node-state | jq` . Running this command will return something like:
 ```
 {
   "pub_key": "12D3KooWNqxhrQXgDKhfWnJi3kCNS9XgkPdnSGvAV3QY4eZJ4oCF",
@@ -141,6 +141,71 @@ Before you start the experiments, make sure you can test the basic publish and s
   - Stop Docker containers with `make stop_and_remove_containers`
   - Upload your new configuration file with `make upload_config` 
   - Deploy again `make deploy`
+
+### Experiment Automation (Latency + Breakpoints)
+
+Subcategory 1 (protocol params) and Subcategory 2 (message size/rate/location) are automated with new scripts under `scripts/`:
+
+- `scripts/subscribe.sh` and `scripts/publish.sh` now accept env vars:
+  - `PROXY_IP`, `TOPIC`, `NUM_MESSAGES`, `MESSAGE_SIZE_BYTES`, `PUBLISH_RATE_PER_SEC`, `CLIENT_ID`, `DEBUG_FLAG`
+  - Publisher embeds `{id, ts}` into each message for end-to-end latency.
+  - Subscriber prepends a receive timestamp and writes logs to `logs/`.
+
+- One-shot sweep for Subcategory 2:
+```
+SUB_PROXY="<subscriber-proxy-ip>" \
+PUB_PROXY="<publisher-proxy-ip>" \
+TOPIC=mytopic \
+NUM_MESSAGES=200 \
+SIZES="256,1024,4096,16384,65536" \
+RATES="0,5,10,20" \
+./scripts/run_sweep.sh
+```
+Results CSV files will be in `results/<timestamp>/`. To parse any single subscriber log manually:
+```
+./scripts/parse_latency.py logs/<timestamp>/subscriber_<ip>_mytopic_sz256_r5.log results/latency.csv
+```
+
+- Change protocol parameters (Subcategory 1) and redeploy:
+```
+./scripts/set_config.sh mesh_degree_target 12
+./scripts/set_config.sh rlnc_shard_factor 8
+./scripts/set_config.sh forward_shard_threshold 0.6
+make upload_config && make deploy
+```
+
+- Switch between Optimum (mump2p) and GossipSub for comparison:
+```
+./scripts/set_config.sh node_mode gossipsub
+make upload_config && make deploy
+# run sweeps again; compare results vs node_mode optimum
+```
+
+Tips:
+- Use different `SUB_PROXY` and `PUB_PROXY` regions to test geo effects.
+- `RATES=0` means publish as fast as possible. Non-zero sets messages/sec.
+- For larger messages, also adjust `max_message_size_bytes` via `set_config.sh` if needed.
+
+### Visualize Results (Next.js app)
+
+1) After running sweeps, build the visualization dataset:
+```
+node scripts/build_results_manifest.js
+```
+This copies CSVs into `web/public/data/<timestamp>/` and writes `web/public/data/manifest.json`.
+
+2) Start the Next.js app (in another terminal):
+```
+cd web
+npm install
+npm run dev
+# open http://localhost:3000
+```
+Pick a dataset from the dropdown to see p50/p90/p99/max and a latency timeline.
+
+### Full Experiment Guide
+
+See `EXPERIMENTS.md` for detailed breakpoint testing instructions.
 
 ### Tracks and Other Information
 - **Details**: [https://dorahacks.io/hackathon/hackmos-2025/detail](https://dorahacks.io/hackathon/hackmos-2025/detail)

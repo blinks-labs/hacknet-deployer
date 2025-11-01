@@ -1,0 +1,22 @@
+# Results and logs
+results/
+logs/
+
+# Web app
+web/node_modules/
+web/.next/
+web/package-lock.json
+web/public/data/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+

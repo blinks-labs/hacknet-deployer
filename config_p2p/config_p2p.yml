@@ -20,4 +20,4 @@ optimum:
   mesh_degree_min: 4
   mesh_degree_max: 12
   bootstrap_peers:
-    - "/ip4/<bootstrap_IP>/tcp/7070/p2p/<bootstrap_peer_id>"
+    - "/ip4/34.118.183.212/tcp/7070/p2p/12D3KooWH4v2ZyiehGSQ68qdX7ScpjiWhaSMiQE6HgnvrwSEJMqu"

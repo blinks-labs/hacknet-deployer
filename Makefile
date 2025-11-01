@@ -54,3 +54,11 @@ stop_and_remove_containers: ## Stop and remove containers (usage: make stop_and_
 	
 .DEFAULT_GOAL := help
 .PHONY: help check_hackathon_hosts upload_config deploy stop_and_remove_containers
+
+multi_run_sweep:
+	SUB_PROXY="136.117.96.13" PUB_PROXY="35.185.219.82" TOPIC=test3 \
+		NUM_MESSAGES=200 \
+		SIZES="256,1024,4096,16384,65536" \
+		RATES="0,5,10,20" \
+		./scripts/run_sweep.sh 2>&1 | grep -E "(===|Parsed|Failed|complete)"
+	node scripts/build_results_manifest.js 2>&1
